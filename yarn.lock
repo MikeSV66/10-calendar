@@ -1962,6 +1962,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+use-double-click@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/use-double-click/-/use-double-click-1.0.5.tgz#656a3c3c528b5cd3ff40ee548bac0d50b714dfc6"
+  integrity sha512-71LUca6NtzpzHYlcfM/dOdmwvmvpMbzeIVQpN87w+DctpLiMCXtZpsN8FNWPgHpPBtNhvucPUHIDh5al8D8C7w==
+
 vary@^1, vary@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
