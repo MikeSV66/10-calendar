@@ -3,28 +3,16 @@ import { useState } from 'react';
 import { Calendar, Views } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { addHours } from 'date-fns'
-import useDoubleClick from 'use-double-click';
-
-import { CalendarEvent, Navbar } from "../"
+import { CalendarEvent, CalendarModal, FabAddNew, FabDelete, Navbar } from "../"
 import { localizer, getMessagesES } from '../../helpers';
+import { useCalendarStore, useUiStore } from '../../hooks';
 
-
-const events = [{
-  title: 'Cumpleaños del jefe',
-  notes: 'Hay que comprar el pastel',
-  start: new Date(),
-  end: addHours( new(Date), 2 ),
-  bgColor: '#fAfAfA',
-  user: {
-    _id: '123',
-    name: 'Miguel'
-  }
-}]
 
 export const CalendarPage = () => {
 
-  const [currentView, setCurrentView] = useState(Views.MONTH);
+  const { openDateModal, isDateModalOpen } = useUiStore();
+  const { events, setActiveEvent } = useCalendarStore();
+  const [currentView, setCurrentView] = useState(localStorage.getItem('lastView') || 'week');
   const [currentDate, setCurrentDate] = useState(new Date());
 
   let timer;
@@ -44,20 +32,23 @@ export const CalendarPage = () => {
     }
   }
 
+
   
   const onDoubleClick = ( event ) => {
-    clearTimeout(timer); // Clear the timer to prevent single click action
-      // Perform double click action
-      console.log({Doubleclick: event});
+      //console.log({Doubleclick: event});
+      openDateModal();
   }
 
   const onSelect = ( event ) => {
-    timer = setTimeout(() => {
-        // Perform single click action only if not cleared by double click
-        console.log({Click: event }); 
-      }, delay);   
+      //console.log({Click: event }); 
+      setActiveEvent( event );
   }
 
+  const handleViewChange = ( view ) => {
+    localStorage.setItem('lastView', view)
+    setCurrentView(view); // Actualiza el estado
+  };
+  
   return (
     <>
       <Navbar />
@@ -70,7 +61,7 @@ export const CalendarPage = () => {
         endAccessor="end"
         date={ currentDate }
         view={ currentView }
-        onView={ setCurrentView }
+        onView={ handleViewChange }
         onNavigate={ setCurrentDate }
         style={{ height: 'calc( 100vh - 80px )' }}
         messages={ getMessagesES() }
@@ -79,9 +70,15 @@ export const CalendarPage = () => {
           event: CalendarEvent
         }}
         onDoubleClickEvent={ onDoubleClick }    
-        onSelectEvent={ onSelect }    
+        onSelectEvent={ onSelect }  
     />
 
+    <CalendarModal />
+    <FabAddNew />
+    {isDateModalOpen ? '': <FabDelete />}
+    
+
+    
     </>
   )
 }
